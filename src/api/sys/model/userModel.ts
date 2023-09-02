@@ -11,7 +11,7 @@ export interface LoginParams {
  */
 export interface AuthModel {
   family_uuid: string;
-  uuid: string;
+  id: string;
   name: string;
   avatar: string;
   token: string;

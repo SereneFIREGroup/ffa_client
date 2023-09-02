@@ -1,0 +1,2 @@
+export * from "/Users/nuc/go/src/github.com/SereneFIREGroup/ffa_client/internal/eslint-config/src/index";
+export { default } from "/Users/nuc/go/src/github.com/SereneFIREGroup/ffa_client/internal/eslint-config/src/index";

@@ -31,7 +31,7 @@ export interface ErrorLogInfo {
 
 export interface UserInfo {
   family_uuid: string;
-  uuid: string;
+  id: string;
   name: string;
   avatar: string;
   token: string;

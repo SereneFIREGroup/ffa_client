@@ -76,7 +76,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useUserStore } from '/@/store/modules/user';
   import { useLoginState, useFormRules, useFormValid, LoginStateEnum } from './useLogin';
-  import { calculateMD5 } from '/@/utils/crypto';
+  import {encryptByMd5} from "@/utils/cipher";
 
   const { notification, createErrorModal } = useMessage();
   const FormItem = Form.Item;
@@ -109,7 +109,7 @@
 
     try {
       loading.value = true;
-      const passwordHash = calculateMD5(data.password);
+      const passwordHash = encryptByMd5(data.password);
       console.log(passwordHash);
       const userInfo = await userStore.register({
         phone: '+86' + data.mobile,

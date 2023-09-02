@@ -71,8 +71,7 @@
   import { useUserStore } from '/@/store/modules/user';
   import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
   import { useDesign } from '/@/hooks/web/useDesign';
-  //import { onKeyStroke } from '@vueuse/core';
-  import { calculateMD5 } from '/@/utils/crypto';
+  import {encryptByMd5} from "@/utils/cipher";
 
   const ACol = Col;
   const ARow = Row;
@@ -90,6 +89,12 @@
   const loading = ref(false);
   const rememberMe = ref(false);
 
+  const formData = reactive({
+    account: 'ffa',
+    password: '123456',
+  });
+
+
   const { validForm } = useFormValid(formRef);
 
   //onKeyStroke('Enter', handleLogin);
@@ -101,7 +106,7 @@
     if (!data) return;
     try {
       loading.value = true;
-      const passwordHash = calculateMD5(data.password);
+      const passwordHash = encryptByMd5(data.password);
       const userInfo = await userStore.login({
         password: passwordHash,
         phone: '+86' + data.account,
@@ -110,7 +115,7 @@
       if (userInfo) {
         notification.success({
           message: t('sys.login.loginSuccessTitle'),
-          description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.realName}`,
+          description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.name}`,
           duration: 3,
         });
       }

@@ -16,8 +16,11 @@ export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') 
   return defHttp.post<AuthModel>({url: Api.Login,params,},{errorMessageMode: mode});
 }
 
-export function getUserInfo() {
-  return defHttp.get<AuthModel>({ url: Api.GetUserInfo }, { errorMessageMode: 'none' });
+export function getUserInfo(userID: string,token: string) {
+  return defHttp.get<AuthModel>({ url: Api.GetUserInfo, headers:{
+      'X-User-ID': userID,
+      'X-Token': token,
+    } }, { errorMessageMode: 'none' });
 }
 
 export function doLogout() {

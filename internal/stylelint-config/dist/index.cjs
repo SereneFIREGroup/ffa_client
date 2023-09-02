@@ -1,0 +1,1 @@
+module.exports = require("/Users/nuc/go/src/github.com/SereneFIREGroup/ffa_client/node_modules/.pnpm/jiti@1.19.3/node_modules/jiti/lib/index.js")(null, { interopDefault: true, esmResolve: true })("/Users/nuc/go/src/github.com/SereneFIREGroup/ffa_client/internal/stylelint-config/src/index.ts")

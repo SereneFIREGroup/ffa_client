@@ -40,7 +40,7 @@ export const useUserStore = defineStore({
       return state.token || getAuthCache<string>(TOKEN_KEY);
     },
     getUserID(state): string {
-      return state.userInfo?.uuid || getAuthCache<string>(USER_ID_KEY);
+      return state.userInfo?.id || getAuthCache<string>(USER_ID_KEY);
     },
     getSessionTimeout(state): boolean {
       return !!state.sessionTimeout;
@@ -54,8 +54,8 @@ export const useUserStore = defineStore({
       this.token = info ? info : ''; // for null or undefined value
       setAuthCache(TOKEN_KEY, info);
     },
-    setUserID() {
-      setAuthCache(USER_ID_KEY, this.userInfo.uuid);
+    setUserID(id: string | undefined) {
+      setAuthCache(USER_ID_KEY, id);
     },
     setUserInfo(info: UserInfo | null) {
       this.userInfo = info;
@@ -83,9 +83,11 @@ export const useUserStore = defineStore({
         const { goHome = true, mode, ...loginParams } = params;
         const data = await loginApi(loginParams, mode);
         const { token } = data;
+        const { id } = data;
 
         // save token
         this.setToken(token);
+        this.setUserID(id);
         return this.afterLoginAction(goHome);
       } catch (error) {
         return Promise.reject(error);
@@ -100,13 +102,15 @@ export const useUserStore = defineStore({
       if (sessionTimeout) {
         this.setSessionTimeout(false);
       } else {
-        goHome && (await router.replace(userInfo?.homePath || PageEnum.BASE_HOME));
+        goHome && (await router.replace(PageEnum.BASE_HOME));
       }
       return userInfo;
     },
     async getUserInfoAction(): Promise<UserInfo | null> {
       if (!this.getToken) return null;
-      const userInfo = await getUserInfo();
+      const userID = this.getUserID
+      const token = this.getToken
+      const userInfo = await getUserInfo(userID,token);
       this.setUserInfo(userInfo);
       return userInfo;
     },
@@ -155,11 +159,11 @@ export const useUserStore = defineStore({
         const { goHome = true, mode, ...registerParams } = params;
         const data = await register(registerParams, mode);
         const { token } = data;
-
+        const { id } = data;
         // save token
         this.setUserInfo(data)
         this.setToken(token);
-        this.setUserID();
+        this.setUserID(id);
         return this.afterLoginAction(goHome); // TODO 这里有问题，先不管
       } catch (error) {
         return Promise.reject(error);

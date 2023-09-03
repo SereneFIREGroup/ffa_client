@@ -23,8 +23,11 @@ export function getUserInfo(userID: string,token: string) {
     } }, { errorMessageMode: 'none' });
 }
 
-export function doLogout() {
-  return defHttp.post({ url: Api.Logout });
+export function doLogout(userID: string,token: string) {
+  return defHttp.post({ url: Api.Logout , headers:{
+      'X-User-ID': userID,
+      'X-Token': token,
+    } });
 }
 
 export function verifyCode(params: VerifyCodeParams, mode: ErrorMessageMode) {

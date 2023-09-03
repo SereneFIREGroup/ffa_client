@@ -5,9 +5,20 @@ import { store } from "/@/store";
 import { PageEnum } from "/@/enums/pageEnum";
 import { TOKEN_KEY, USER_ID_KEY, USER_INFO_KEY } from "/@/enums/cacheEnum";
 import { getAuthCache, setAuthCache } from "/@/utils/auth";
-import {AuthModel,LoginParams,RegisterParams,VerifyCodeParams} from "/@/api/sys/model/userModel";
+import {
+  AuthModel,
+  LoginParams,
+  RegisterParams,
+  VerifyCodeParams,
+} from "/@/api/sys/model/userModel";
 import { ResponseModel } from "/@/api/sys/model/respModel";
-import { doLogout, getUserInfo, loginApi, register, verifyCode } from "/@/api/sys/user";
+import {
+  doLogout,
+  getUserInfo,
+  loginApi,
+  register,
+  verifyCode,
+} from "/@/api/sys/user";
 import { useI18n } from "/@/hooks/web/useI18n";
 import { useMessage } from "/@/hooks/web/useMessage";
 import { router } from "/@/router";
@@ -21,7 +32,7 @@ interface UserState {
 }
 
 export const useUserStore = defineStore({
-  id: 'app-user',
+  id: "app-user",
   state: (): UserState => ({
     // user info
     userInfo: null,
@@ -42,6 +53,9 @@ export const useUserStore = defineStore({
     getUserID(state): string {
       return state.userInfo?.id || getAuthCache<string>(USER_ID_KEY);
     },
+    getFamilyID(state): string {
+      return state.userInfo?.family_id | "";
+    },
     getSessionTimeout(state): boolean {
       return !!state.sessionTimeout;
     },
@@ -51,7 +65,7 @@ export const useUserStore = defineStore({
   },
   actions: {
     setToken(info: string | undefined) {
-      this.token = info ? info : ''; // for null or undefined value
+      this.token = info ? info : ""; // for null or undefined value
       setAuthCache(TOKEN_KEY, info);
     },
     setUserID(id: string | undefined) {
@@ -67,7 +81,7 @@ export const useUserStore = defineStore({
     },
     resetState() {
       this.userInfo = null;
-      this.token = '';
+      this.token = "";
       this.sessionTimeout = false;
     },
     /**
@@ -77,7 +91,7 @@ export const useUserStore = defineStore({
       params: LoginParams & {
         goHome?: boolean;
         mode?: ErrorMessageMode;
-      },
+      }
     ): Promise<AuthModel | null> {
       try {
         const { goHome = true, mode, ...loginParams } = params;
@@ -108,9 +122,9 @@ export const useUserStore = defineStore({
     },
     async getUserInfoAction(): Promise<UserInfo | null> {
       if (!this.getToken) return null;
-      const userID = this.getUserID
-      const token = this.getToken
-      const userInfo = await getUserInfo(userID,token);
+      const userID = this.getUserID;
+      const token = this.getToken;
+      const userInfo = await getUserInfo(userID, token);
       this.setUserInfo(userInfo);
       return userInfo;
     },
@@ -120,9 +134,11 @@ export const useUserStore = defineStore({
     async logout(goLogin = false) {
       if (this.getToken) {
         try {
-          await doLogout();
+          const userID = this.getUserID;
+          const token = this.getToken;
+          await doLogout(userID, token);
         } catch {
-          console.log('注销Token失败');
+          console.log("注销Token失败");
         }
       }
       this.setToken(undefined);
@@ -136,7 +152,7 @@ export const useUserStore = defineStore({
     async verifyPhone(
       params: VerifyCodeParams & {
         mode?: ErrorMessageMode;
-      },
+      }
     ): Promise<ResponseModel | null> {
       try {
         const { mode } = params;
@@ -161,10 +177,10 @@ export const useUserStore = defineStore({
         const { token } = data;
         const { id } = data;
         // save token
-        this.setUserInfo(data)
+        this.setUserInfo(data);
         this.setToken(token);
         this.setUserID(id);
-        return this.afterLoginAction(goHome); // TODO 这里有问题，先不管
+        return this.afterLoginAction(goHome);
       } catch (error) {
         return Promise.reject(error);
       }
@@ -177,9 +193,9 @@ export const useUserStore = defineStore({
       const { createConfirm } = useMessage();
       const { t } = useI18n();
       createConfirm({
-        iconType: 'warning',
-        title: () => h('span', t('sys.app.logoutTip')),
-        content: () => h('span', t('sys.app.logoutMessage')),
+        iconType: "warning",
+        title: () => h("span", t("sys.app.logoutTip")),
+        content: () => h("span", t("sys.app.logoutMessage")),
         onOk: async () => {
           await this.logout(true);
         },

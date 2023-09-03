@@ -1,5 +1,5 @@
-import { ErrorTypeEnum } from '/@/enums/exceptionEnum';
-import { MenuModeEnum, MenuTypeEnum } from '/@/enums/menuEnum';
+import { ErrorTypeEnum } from "/@/enums/exceptionEnum";
+import { MenuModeEnum, MenuTypeEnum } from "/@/enums/menuEnum";
 
 // Lock screen information
 export interface LockInfo {
@@ -30,11 +30,19 @@ export interface ErrorLogInfo {
 }
 
 export interface UserInfo {
-  family_uuid: string;
+  family_id: string;
   id: string;
   name: string;
   avatar: string;
   token: string;
+}
+
+export interface FamilyInfo {
+  id: string;
+  owner: string;
+  name: string;
+  fire_goal: number;
+  total_assets: number;
 }
 
 export interface BeforeMiniState {

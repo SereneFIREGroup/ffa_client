@@ -1,6 +1,6 @@
 export default {
-  dashboard: 'Dashboard',
-  about: 'About',
-  workbench: 'Workbench',
-  analysis: 'Analysis',
+  dashboard: "Household assets",
+  about: "About",
+  workbench: "Workbench",
+  analysis: "Analysis",
 };

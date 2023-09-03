@@ -10,7 +10,7 @@ export interface LoginParams {
  * @description: auth interface return value
  */
 export interface AuthModel {
-  family_uuid: string;
+  family_id: string;
   id: string;
   name: string;
   avatar: string;
